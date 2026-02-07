@@ -1,0 +1,37 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    volumes:
+      - ollama_data:/root/.ollama
+    command: |
+      sh -c "
+      ollama serve &
+      sleep 10 &&
+      echo 'Загружаем модель llama3:8b-instruct-q6_K...' &&
+      ollama pull llama3:8b-instruct-q6_K &&
+      echo 'Модель загружена. Ollama готов.' &&
+      wait
+      "
+
+  rag-bot:
+    build: .
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ./knowledge_base:/app/knowledge_base
+      - ./scripts:/app/scripts
+      - ./data:/app/data
+    stdin_open: true
+    tty: true
+
+volumes:
+  ollama_data:
