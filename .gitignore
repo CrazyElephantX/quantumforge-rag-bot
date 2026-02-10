@@ -1,0 +1,20 @@
+# Виртуальное окружение
+.venv/
+__pycache__/
+*.pyc
+
+# Логи
+*.log
+logs/
+
+# Локальные данные
+data/faiss_index/
+
+# Конфиги
+config.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
